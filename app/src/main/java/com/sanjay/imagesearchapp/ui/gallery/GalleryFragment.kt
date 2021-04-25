@@ -11,26 +11,29 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class GalleryFragment : Fragment(R.layout.fragment_gallery) {
 
-    private val viewModel:GalleryViewModel by viewModels()
+    private val viewModel: GalleryViewModel by viewModels()
 
-    private  var _binding: FragmentGalleryBinding? = null
-    private val binding get()  = _binding!!
+    private var _binding: FragmentGalleryBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var photoAdapter: UnsplashPhotoAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-         _binding = FragmentGalleryBinding.bind(view)
+        _binding = FragmentGalleryBinding.bind(view)
 
         photoAdapter = UnsplashPhotoAdapter()
         binding.recyclerView.apply {
             setHasFixedSize(true)
-            adapter = photoAdapter
+            adapter = photoAdapter.withLoadStateHeaderAndFooter(
+                header = UnsplashPhotoLoadStateAdapter { photoAdapter.retry() },
+                footer = UnsplashPhotoLoadStateAdapter { photoAdapter.retry() }
+            )
         }
 
         viewModel.photos.observe(viewLifecycleOwner) {
-           photoAdapter.submitData(viewLifecycleOwner.lifecycle,it)
+            photoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
     }
 
