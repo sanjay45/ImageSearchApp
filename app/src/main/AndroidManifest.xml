@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sanjay.imagesearchapp">
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+
+    <!-- Glide need this permission to automatically reload images. For ex if the
+    internet was off and now we are back online without this Glide won't do it.-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".ImageSearchApplication"
