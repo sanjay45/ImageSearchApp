@@ -11,14 +11,24 @@ import com.sanjay.imagesearchapp.R
 import com.sanjay.imagesearchapp.data.UnsplashPhoto
 import com.sanjay.imagesearchapp.databinding.ItemUnsplashPhotoBinding
 
-class UnsplashPhotoAdapter :
+class UnsplashPhotoAdapter(private val onClick: (UnsplashPhoto) -> Unit) :
     PagingDataAdapter<UnsplashPhoto, UnsplashPhotoAdapter.UnsplashPhotoViewHolder>(
         PhotoDiffUtilCallback
     ) {
 
-    class UnsplashPhotoViewHolder(val binding: ItemUnsplashPhotoBinding) :
+     class UnsplashPhotoViewHolder(val binding: ItemUnsplashPhotoBinding,
+                                   val onClick: (UnsplashPhoto) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
+
+         private lateinit var currentPhoto: UnsplashPhoto
+
+        init {
+            binding.root.setOnClickListener {
+                onClick(currentPhoto)
+            }
+        }
         fun bindData(photo: UnsplashPhoto) {
+            currentPhoto = photo
             binding.apply {
                 Glide.with(itemView)
                     .load(photo.urls.regular)
@@ -45,7 +55,7 @@ class UnsplashPhotoAdapter :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UnsplashPhotoViewHolder {
         val binding =
             ItemUnsplashPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return UnsplashPhotoViewHolder(binding)
+        return UnsplashPhotoViewHolder(binding,onClick)
     }
 }
 
